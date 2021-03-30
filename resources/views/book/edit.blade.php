@@ -18,7 +18,7 @@
 
                         <div class="form-group">
                         <label>Title</label>
-                        <input type="text" name="book_title"  class="form-control" value="{{$book->title}}">
+                        <input type="text" name="book_title"  class="form-control" value="{{old('book_title', $book->title)}}">
                         <small class="form-text text-muted">Please enter books name</small>
                         </div>
                       
@@ -26,14 +26,14 @@
 
                       <div class="form-group">
                         <label>ISBN: </label>
-                        <input type="text" class="form-control" name="book_isbn" value="{{$book->isbn}}">
+                        <input type="text" class="form-control" name="book_isbn" value="{{old('book_isbn',$book->isbn)}}">
                         <small class="form-text text-muted">Please enter ISBN</small>
                       </div>
 
 
                       <div class="form-group">
                         <label>Pages: </label>
-                        <input type="text" class="form-control" name="book_pages" value="{{$book->pages}}">
+                        <input type="text" class="form-control" name="book_pages" value="{{$book->pages}}" value="{{old('book_pages',$book->pages)}}" >
                         <small class="form-text text-muted">Please enter pages count</small>
                       </div>
 
@@ -46,7 +46,7 @@
                       <label>Author: </label>
                     <select name="author_id">
                         @foreach ($authors as $author)
-                            <option value="{{$author->id}} @if($author->id == $book->author_id)" selected @endif>
+                            <option value="{{$author->id}}" @if($author->id == $book->author_id) selected @endif>
                                 {{$author->name}} {{$author->surname}}
                             </option>
                         @endforeach
@@ -61,9 +61,10 @@
    </div>
 </div>
 <script>
-    $(document).ready(function() {
-       $('#summernote').summernote();
-     });
-    </script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+      $('#summernote').summernote();
+  });
+  </script>
+  
     
 @endsection

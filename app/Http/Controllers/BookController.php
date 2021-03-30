@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Author;
 use Illuminate\Http\Request;
-
+use Validator;
 class BookController extends Controller
 {
 
@@ -18,11 +18,26 @@ class BookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::all();
-        return view('book.index', ['books' => $books]);
- 
+        $authors = Author::all();
+        // $book = Book::all();
+
+        if ($request->author_id) {
+            $books = Book::where('author_id', $request->author_id)->get();
+            $filterBy = $request->author_id;
+        }
+        else {
+            $books = Book::all();
+        }
+        
+        return view('book.index', [
+            'books' => $books,
+            'authors' => $authors,
+            'filterBy' => $filterBy ?? 0
+            ]);
+
+       
     }
 
     /**
@@ -46,6 +61,22 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(),
+        [
+            'book_title' => ['required', 'min:3', 'max:64'],
+            'book_isbn' => ['required', 'min:2', 'max:20'],
+            'book_pages' => ['required', 'min:1', 'max:1000'],
+        ],
+         [
+             'book_title.min' => 'Pavadinimas trumpesnis nei 3 simboliai',
+             'book_isbn.min' => 'ISBN trumpesnis nei 3 simboliai',
+             'book_pages.min' => 'Puslapiu skaicius negali buti tuscias laukelis'
+         ]
+        );
+        if ($validator->fails()) {
+            $request->flash();
+            return redirect()->back()->withErrors($validator);
+        }
         $book = new Book;
         $book->title = $request->book_title;
         $book->isbn = $request->book_isbn;
@@ -89,6 +120,22 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
+        $validator = Validator::make($request->all(),
+        [
+            'book_title' => ['required', 'min:3', 'max:64'],
+            'book_isbn' => ['required', 'min:2', 'max:20'],
+            'book_pages' => ['required', 'min:1', 'max:1000'],
+        ],
+         [
+             'book_title.min' => 'Pavadinimas trumpesnis nei 3 simboliai',
+             'book_isbn.min' => 'ISBN trumpesnis nei 3 simboliai',
+             'book_pages.min' => 'Puslapiu skaicius negali buti tuscias laukelis'
+         ]
+        );
+        if ($validator->fails()) {
+            $request->flash();
+            return redirect()->back()->withErrors($validator);
+        }
         $book->title = $request->book_title;
        $book->isbn = $request->book_isbn;
        $book->pages = $request->book_pages;

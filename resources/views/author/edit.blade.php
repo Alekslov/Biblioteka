@@ -14,13 +14,13 @@
 
                     <div class="form-group">
                         <label>Name: </label>
-                        <input type="text" class="form-control" name="author_name" value="{{$author->name}}">
+                        <input type="text" class="form-control" name="author_name" value="{{old('author_name',$author->name)}}">
                         <small class="form-text text-muted">Please enter authors name</small>
                       </div>
 
                       <div class="form-group">
                         <label>Surname: </label>
-                        <input type="text" class="form-control" name="author_surname" value="{{$author->surname}}">
+                        <input type="text" class="form-control" name="author_surname" value="{{old('author_surname',$author->surname)}}">
                         <small class="form-text text-muted">Please enter authors surname</small>
                       </div>
                     
